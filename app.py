@@ -5,11 +5,18 @@ from werkzeug.exceptions import BadRequest
 from datetime import date
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lab6.db'
+
+
+# Update this line
+import os
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '').replace('postgres://', 'postgresql://', 1)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-@app.errorhandler(404)
-def not_found(error):
-    return jsonify({'error': 'Resource not found'}), 404
+
+db = SQLAlchemy(app)
 
 @app.errorhandler(400)
 def bad_request(error):
